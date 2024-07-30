@@ -1,7 +1,80 @@
-﻿@{
+﻿@model ScreenSoundWeb.Models.Banda
+@{
     ViewData["Title"] = "Avaliar Banda";
+
+    var mensagemNaoEncontrado = TempData["Mensagem"] as string;
+    var mensagemPreencha = TempData["CampoVazio"] as string;
+    var confirmed = TempData["Confirmado"] as string;
 }
 
-<h1 class="display-4">@ViewData["Title"]</h1>
+@if (TempData["BandaEncontrada"] != null && (bool)TempData["BandaEncontrada"])
+{
+    <div class="text-center">
+        <h1 class="display-4">Avaliar a Banda @TempData["NomeBanda"]</h1>
+    </div>
+    <div>
+        <form asp-controller="Home" asp-action="AdicionarNota" method="post">
+            <input type="hidden" name="nomeBanda" value="@TempData["NomeBanda"]" />
+            <div class="mb-3">
+                <label for="nota">Qual a nota que a banda @TempData["NomeBanda"] merece:</label>
+                <input type="text" class="form-control" id="nota" name="nota" placeholder="Digite um Valor">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Avaliar</button>
+            <a class="btn btn-secondary btn-block" asp-controller="Home" asp-action="Index" role="button">Voltar</a>
+        </form>
+    </div>
+}
+else
+{
 
-<h4 class="mt-5">Digite o nome da banda que deseja avaliar:</h4>
+    @if (TempData["BandaEncontrada"] != null && !(bool)TempData["BandaEncontrada"])
+    {
+        if (!string.IsNullOrEmpty(mensagemNaoEncontrado))
+        {
+            <div class="alert alert-danger" role="alert">
+                @mensagemNaoEncontrado
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-danger" role="alert">
+                @mensagemPreencha
+            </div>
+        }
+    }
+
+    @if (!string.IsNullOrEmpty(confirmed))
+    {
+        <div class="alert alert-success" role="alert">
+            @confirmed
+        </div>
+    }
+
+    @if (TempData["NotaInvalida"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["NotaInvalida"]
+        </div>
+    }
+
+    @if (TempData["Erro"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Erro"]
+        </div>
+    }
+
+    <div class="text-center">
+        <h1 class="display-4">@ViewData["Title"]</h1>
+    </div>
+    <div>
+        <form asp-controller="Home" asp-action="VerificarBandaParaAvaliar" method="post">
+            <div class="mb-3">
+                <label for="avaliar">Digite o nome da banda que deseja avaliar:</label>
+                <input type="text" name="nomeBanda" id="nomeBanda" class="form-control" placeholder="Digite o nome da Banda">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Verificar Banda</button>
+            <a class="btn btn-secondary btn-block" asp-controller="Home" asp-action="Index" role="button">Voltar</a>
+        </form>
+    </div>
+}

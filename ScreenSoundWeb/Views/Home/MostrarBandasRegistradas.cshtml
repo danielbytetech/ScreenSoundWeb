@@ -1,6 +1,38 @@
-﻿@{ 
+﻿@model IEnumerable<ScreenSoundWeb.Models.Banda>
+@{ 
     ViewData["Title"] = "Exibindo todas as bandas registradas";
+    int counter = 1;
 }
 
-<h1 class="display-4">@ViewData["Title"]</h1>
+<div class="text-center">
+    <h1 class="display-4">Todas as Bandas Registradas </h1>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>        
+            <th scope="col"></th>        
+            <th scope="col"></th>        
+            <th scope="col"></th>        
+        </tr>
+    </thead>
+    <tbody class="table-group-divider">
+        @foreach (var banda in Model)
+        {
+            <tr>
+                <th scope="row">@counter</th>
+                <td>@banda.Nome</td>
+                <td></td>
+                <td></td>
+                <td></td>                
+            </tr>
+            counter++;
+        }
+
+
+
+    </tbody>
+</table>
 

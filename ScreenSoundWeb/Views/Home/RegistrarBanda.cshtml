@@ -1,8 +1,44 @@
-﻿@{
-    ViewData["Title"] = "Registro das Bandas";
+﻿@model ScreenSoundWeb.Models.Banda
+
+@{
+    ViewData["Title"] = "Registro de Bandas";
+
+    var errorCampoVazio = TempData["CampoVazio"] as string;
+    var erroMesmoValor = TempData["MesmoNome"] as string;
+
+    var confirmed = TempData["Confirmado"] as string;
 }
-<h1 class="display-4">@ViewData["Title"]</h1>
 
-<h4 class="mt-5">Digite o nome da banda que deseja registrar:</h4>
+@if (!string.IsNullOrEmpty(errorCampoVazio))
+{
+    <div class="alert alert-danger" role="alert">
+        @errorCampoVazio
+    </div>
+}
+else if (!string.IsNullOrEmpty(erroMesmoValor))
+{
+    <div class="alert alert-danger" role="alert">
+        @erroMesmoValor
+    </div>
+}
+else if (!string.IsNullOrEmpty(confirmed))
+{
+    <div class="alert alert-success" role="alert">
+        @confirmed
+    </div>
+}
 
+<div class="text-center">
+    <h1 class="display-4 mb-4">@ViewData["Title"]</h1>
+</div>
+
+<form asp-controller="Home" asp-action="CriarBanda" method="post">
+    <div class="mb-3">
+        <label for="banda">Digite o nome da banda que deseja registrar:</label>
+        <input type="text" asp-for="Nome" class="form-control" id="Nome" name="nomeBanda" placeholder="Digite o nome da Banda">
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block">Adicionar</button>
+    <a class="btn btn-secondary btn-block" asp-controller="Home" asp-action="Index" role="button">Voltar</a>
+</form>
 

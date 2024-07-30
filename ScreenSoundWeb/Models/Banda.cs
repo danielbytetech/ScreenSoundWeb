@@ -4,43 +4,50 @@
     using System.Collections.Generic;
     using System;
     using System.Linq;
+    using System.ComponentModel.DataAnnotations.Schema;
 
-    public class Banda
+    public class Banda : IAvaliavel
     {
-        private List<Album> albuns = new List<Album>();
-        private List<Avaliacao> notas = new List<Avaliacao>();
+        public Banda()
+        {
+            Albuns = new List<Album>();
+            Notas = new List<Avaliacao>();
+        }
 
-        public Banda(string nome)
+        public Banda(string nome) : this()
         {
             Nome = nome;
         }
 
-        public string Nome { get; }
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        
         public double Media
         {
             get
             {
-                if (notas.Count == 0) return 0;
-                else return notas.Average(a => a.Nota);
-            }
+                if (Notas.Count == 0) return 0;
+                else return Notas.Average(a => a.Nota);
+            }            
         }
-        public List<Album> Albuns => albuns;
+        public ICollection<Album> Albuns { get; set; }
+        public ICollection<Avaliacao> Notas { get; set; }
 
 
         public void AdicionarNota(Avaliacao nota)
         {
-            notas.Add(nota);
+            Notas.Add(nota);
         }
 
         public void AdicionarAlbum(Album album)
         {
-            albuns.Add(album);
+            Albuns.Add(album);
         }
 
         public void ExibirDiscografia()
         {
             Console.WriteLine($"Discografia da banda {Nome}");
-            foreach (Album album in albuns)
+            foreach (Album album in Albuns)
             {
                 Console.WriteLine($"Album: {album.Nome} ({album.DuracaoTotal})");
             }

@@ -1,7 +1,77 @@
-﻿@{
+﻿@model ScreenSoundWeb.Data.ApplicationDbContext
+@{
     ViewData["Title"] = "Registro de Albuns";
+
+    var mensagemNaoEncontrado = TempData["Mensagem"] as string;
+    var mengemPreencha = TempData["CampoVazio"] as string;
+    var erroMesmoValor = TempData["MesmoNome"] as string;
+    var confirmed = TempData["Confirmado"] as string;
+
 }
 
-<h1 class="display-4">@ViewData["Title"]</h1>
 
-<h4 class="mt-5">Digite a banda cujo álbum deseja registrar:</h4>
+@if (TempData["BandaEncontrada"] != null && (bool)TempData["BandaEncontrada"])
+{  
+    <div class="text-center">
+        <h1 class="display-4">Registrar Album para @TempData["NomeBanda"]</h1>
+    </div>
+    <div>
+        <form asp-controller="Home" asp-action="SalvarAlbum" method="post">
+            <input type="hidden" name="nomeBanda" value="@TempData["NomeBanda"]" />
+            <div class="mb-3">
+                <label for="nomeAlbum">Digite o álbum que deseja registrar:</label>
+                <input type="text" class="form-control" id="nomeAlbum" name="nomeAlbum" placeholder="Digite o nome do Album">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Registrar Album</button>
+            <a class="btn btn-secondary btn-block" asp-controller="Home" asp-action="Index" role="button">Voltar</a>
+        </form>
+    </div>
+}
+else
+{
+    @if (TempData["BandaEncontrada"] != null && !(bool)TempData["BandaEncontrada"])
+    {
+        if (!string.IsNullOrEmpty(mengemPreencha))
+        {
+            <div class="alert alert-danger" role="alert">
+                @mengemPreencha
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-danger" role="alert">
+                @mensagemNaoEncontrado
+            </div>
+        }
+    }
+      
+        if (!string.IsNullOrEmpty(erroMesmoValor))
+        {
+            <div class="alert alert-danger" role="alert">
+                @erroMesmoValor
+            </div>
+        }
+
+
+    @if (!string.IsNullOrEmpty(confirmed))
+    {
+        <div class="alert alert-success" role="alert">
+            @confirmed
+        </div>
+    }
+
+    <div class="text-center">
+        <h1 class="display-4">Verificar Banda</h1>
+    </div>
+
+    <div>
+        <form asp-controller="Home" asp-action="VerificarBandaParaAlbum" method="post">
+            <div class="mb-3">
+                <label for="album">Digite a banda cujo álbum deseja registrar:</label>
+                <input type="text" name="nomeBanda" id="nomeBanda" class="form-control" placeholder="Digite o nome da Banda">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Verificar Banda</button>
+            <a class="btn btn-secondary btn-block" asp-controller="Home" asp-action="Index" role="button">Voltar</a>
+        </form>
+    </div>
+}

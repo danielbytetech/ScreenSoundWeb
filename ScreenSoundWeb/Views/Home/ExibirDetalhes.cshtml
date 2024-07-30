@@ -1,7 +1,56 @@
-﻿@{
-    ViewData["Title"] = "Exibir Média da Banda";
+﻿@model BandaDetalhesViewModel
+@{
+    ViewData["Title"] = "Exibindo Detalhes";
+
+    int contador = 1;
 }
 
-<h1 class="display-4">@ViewData["Title"]</h1>
+@if (Model != null && Model.BandaEncontrada)
+{
+    <div class="text-center">
+        <h1 class="display-4">@ViewData["Title"]</h1>
+    </div>
+    //Se possivel fazer uma opção para avaliar albuns
+    <div>
+        <p>A média da banda @Model.NomeBanda é @Model.Media.ToString("F2")</p>
+        <p>Discografia:</p>
 
-<h4 class="mt-5">Qual a banda deseja saber a média?</h4>
+        @if (Model.Discografia != null && Model.Discografia.Any())
+        {
+                foreach (var album in Model.Discografia)
+                {
+                    <p>@contador - @album.Nome</p>
+
+                contador++;
+            }
+        }
+        else
+        {
+            <p>Não há álbuns disponíveis na discografia.</p>
+        }  
+        
+    </div>
+}
+else
+{
+    @if (Model != null && !string.IsNullOrEmpty(Model.Mensagem))
+    {
+            <div class="alert alert-danger" role="alert">
+                @Model.Mensagem
+            </div>
+    }
+
+    <div class="text-center">
+        <h1 class="display-4">@ViewData["Title"]</h1>
+    </div>
+    <div>
+        <form asp-controller="Home" asp-action="VerificarBandaParaExibirDetalhes" method="post">
+            <div class="mb-3">
+                <label for="avaliar">Digite o nome da banda que deseja conhecer melhor:</label>
+                <input type="text" name="nomeBanda" id="nomeBanda" class="form-control" placeholder="Digite o nome da Banda">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Verificar Banda</button>
+            <a class="btn btn-secondary btn-block" asp-controller="Home" asp-action="Index" role="button">Voltar</a>
+        </form>
+    </div>
+}
